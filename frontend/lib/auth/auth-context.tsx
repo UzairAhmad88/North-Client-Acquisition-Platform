@@ -26,8 +26,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const DEMO_USER: User = {
   id: "usr_demo_sovereign_01",
-  email: "admin@uzaii.com",
-  full_name: "Uzaii Platform Operator",
+  email: "imuzairahmad8@gmail.com",
+  full_name: "Uzair Ahmad",
   is_active: true,
   is_verified: true,
   role: "SUPER_ADMIN",

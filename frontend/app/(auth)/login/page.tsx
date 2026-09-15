@@ -36,7 +36,7 @@ export default function LoginPage() {
   };
 
   const fillDemoCredentials = () => {
-    setEmail("admin@uzaii.com");
+    setEmail("imuzairahmad8@gmail.com");
     setPassword("SecurePassword123!");
     setError(null);
   };

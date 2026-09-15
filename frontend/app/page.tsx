@@ -33,7 +33,7 @@ export default function Home() {
   const handleLaunchDemo = async () => {
     try {
       if (!user) {
-        await login("admin@uzaii.com", "SecurePassword123!").catch(() => {});
+        await login("imuzairahmad8@gmail.com", "SecurePassword123!").catch(() => {});
       }
       router.push("/dashboard");
     } catch {

@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+.pnpm-store/
+
+# Build outputs
+.next/
+frontend/.next/
+out/
+build/
+dist/
+
+# Python cache & virtual environments
+__pycache__/
+*/__pycache__/
+*/*/__pycache__/
+*/*/*/__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+
+# Databases & local state
+*.db
+*.sqlite
+*.sqlite3
+uzaii.db
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+frontend/.env.local
+
+# Temporary files & IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+scratch/
+.tempmediaStorage/

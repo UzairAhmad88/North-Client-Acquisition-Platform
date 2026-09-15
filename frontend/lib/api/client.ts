@@ -1,7 +1,8 @@
-const PRIMARY_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000/api/v1";
+const PRIMARY_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "/api/v1";
 
 const FALLBACK_URLS = [
   PRIMARY_API_URL,
+  "/api/v1",
   "http://127.0.0.1:8000/api/v1",
   "http://localhost:8000/api/v1",
   "http://127.0.0.1:8008/api/v1",
@@ -46,8 +47,9 @@ async function baseApi<T>(path: string, options: ApiRequestOptions = {}): Promis
     }
   }
 
-  // Deduplicate target URLs
-  const candidateUrls = Array.from(new Set([PRIMARY_API_URL, ...FALLBACK_URLS]));
+  // Deduplicate target URLs and ensure relative origin is tried first in browser
+  const originApi = typeof window !== "undefined" ? `${window.location.origin}/api/v1` : "/api/v1";
+  const candidateUrls = Array.from(new Set([originApi, PRIMARY_API_URL, ...FALLBACK_URLS]));
 
   let lastError: any = null;
 

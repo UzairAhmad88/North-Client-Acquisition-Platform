@@ -112,7 +112,7 @@ export const PromptRegistryManager: React.FC<PromptRegistryManagerProps> = ({ pr
                 </h4>
                 <div className="space-y-2">
                   {selectedPrompt.versions && selectedPrompt.versions.length > 0 ? (
-                    selectedPrompt.versions.map((v) => (
+                    selectedPrompt.versions.map((v: any) => (
                       <div key={v.id} className="bg-zinc-950 border border-zinc-850 p-3 rounded-lg text-xs space-y-1">
                         <div className="flex items-center justify-between">
                           <span className="font-semibold text-zinc-200">{v.version}</span>

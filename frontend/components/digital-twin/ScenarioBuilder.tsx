@@ -38,7 +38,7 @@ export const ScenarioBuilder: React.FC<Props> = ({ onSimulationComplete }) => {
         parameter_overrides: overrides,
       });
 
-      onSimulationComplete(res.data);
+      onSimulationComplete((res as any)?.data || res);
     } catch (err) {
       console.error('Failed to run simulation', err);
     } finally {

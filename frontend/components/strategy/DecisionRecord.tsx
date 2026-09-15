@@ -157,9 +157,9 @@ export const DecisionRecord: React.FC<DecisionRecordProps> = ({
           </div>
         ) : (
           <div className="space-y-3">
-            {decisions.map((dec) => (
+            {decisions.map((dec, idx) => (
               <div
-                key={dec.decision_id}
+                key={dec.id || dec.decision_id || idx}
                 className="p-4 rounded-lg bg-slate-950/60 border border-slate-800/80 space-y-2"
               >
                 <div className="flex items-center justify-between text-xs">
@@ -171,19 +171,21 @@ export const DecisionRecord: React.FC<DecisionRecordProps> = ({
                           : 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
                       }`}
                     >
-                      {dec.status}
+                      {dec.status || 'RECORDED'}
                     </span>
-                    <span className="font-semibold text-white">{dec.question}</span>
+                    <span className="font-semibold text-white">{dec.question || dec.title}</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-slate-400">
                     <Clock className="h-3 w-3" />
-                    <span>{new Date(dec.created_at).toLocaleDateString()}</span>
+                    <span>{dec.created_at ? new Date(dec.created_at).toLocaleDateString() : (dec.date || 'Recent')}</span>
                   </div>
                 </div>
 
                 <div className="text-xs text-slate-300">
                   <span className="text-slate-500">Selected Option: </span>
-                  <span className="font-medium text-indigo-300">{dec.selected_option}</span>
+                  <span className="font-medium text-indigo-300">
+                    {typeof dec.selected_option === 'string' ? dec.selected_option : (dec.decision || JSON.stringify(dec.selected_option || ''))}
+                  </span>
                 </div>
 
                 <div className="text-xs text-slate-400 italic bg-slate-900/40 p-2 rounded border border-slate-800/40">
@@ -191,7 +193,7 @@ export const DecisionRecord: React.FC<DecisionRecordProps> = ({
                 </div>
 
                 <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                  <span>Sign-off: {dec.decided_by}</span>
+                  <span>Sign-off: {dec.decided_by || dec.author}</span>
                   <span>Impact: {dec.impact_rating || 'HIGH'}</span>
                 </div>
               </div>

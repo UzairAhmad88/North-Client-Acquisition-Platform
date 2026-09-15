@@ -4,12 +4,12 @@ import React from 'react';
 import { StrategyOverview as IStrategyOverview } from '@/lib/api/strategy';
 
 interface Props {
-  overview: IStrategyOverview | null;
-  loading: boolean;
-  onRefresh: () => void;
+  overview?: IStrategyOverview | null;
+  loading?: boolean;
+  onRefresh?: () => void;
 }
 
-export const StrategyOverview: React.FC<Props> = ({ overview, loading, onRefresh }) => {
+export const StrategyOverview: React.FC<Props> = ({ overview, loading = false, onRefresh = () => {} }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-12 text-slate-400">

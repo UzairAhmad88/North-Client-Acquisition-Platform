@@ -1,4 +1,4 @@
-import { DocumentViewer } from '@/frontend/components/documents/DocumentViewer';
+import { DocumentViewer } from '@/components/documents/DocumentViewer';
 
 interface DocumentDetailPageProps {
   params: {

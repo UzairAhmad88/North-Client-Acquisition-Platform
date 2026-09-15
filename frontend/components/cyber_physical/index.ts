@@ -1,1 +1,1 @@
-export { default as CyberPhysicalCommandCenterDashboard } from './CyberPhysicalCommandCenterDashboard';\n
+export { default as CyberPhysicalCommandCenterDashboard } from './CyberPhysicalCommandCenterDashboard';

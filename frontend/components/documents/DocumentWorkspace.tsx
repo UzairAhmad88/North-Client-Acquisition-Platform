@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { documentsApi, FileItem, ManagedDocument } from '@/lib/api/documents';
-import { FileUpload } from '@/frontend/components/files/FileUpload';
+import { FileUpload } from '@/components/files/FileUpload';
 import Link from 'next/link';
 
 export function DocumentWorkspace() {

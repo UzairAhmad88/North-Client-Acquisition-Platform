@@ -8,7 +8,20 @@ const FALLBACK_URLS = [
   "http://localhost:8008/api/v1",
 ];
 
-export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
+export interface ApiRequestOptions extends RequestInit {
+  params?: Record<string, any>;
+}
+
+export interface ApiClientFunction {
+  <T>(path: string, options?: ApiRequestOptions): Promise<T>;
+  get<T>(path: string, options?: ApiRequestOptions): Promise<T>;
+  post<T>(path: string, body?: any, options?: ApiRequestOptions): Promise<T>;
+  put<T>(path: string, body?: any, options?: ApiRequestOptions): Promise<T>;
+  patch<T>(path: string, body?: any, options?: ApiRequestOptions): Promise<T>;
+  delete<T>(path: string, options?: ApiRequestOptions): Promise<T>;
+}
+
+async function baseApi<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
   const token = typeof window !== "undefined" ? localStorage.getItem("uzaii_token") : null;
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -19,13 +32,27 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
     headers["Authorization"] = `Bearer ${token}`;
   }
 
+  let finalPath = path;
+  if (options.params) {
+    const query = new URLSearchParams();
+    Object.entries(options.params).forEach(([k, v]) => {
+      if (v !== undefined && v !== null) {
+        query.append(k, String(v));
+      }
+    });
+    const queryString = query.toString();
+    if (queryString) {
+      finalPath += (finalPath.includes('?') ? '&' : '?') + queryString;
+    }
+  }
+
   // Deduplicate target URLs
   const candidateUrls = Array.from(new Set([PRIMARY_API_URL, ...FALLBACK_URLS]));
 
   let lastError: any = null;
 
   for (const baseUrl of candidateUrls) {
-    const targetUrl = `${baseUrl.replace(/\/$/, '')}${path}`;
+    const targetUrl = `${baseUrl.replace(/\/$/, '')}${finalPath}`;
     try {
       const response = await fetch(targetUrl, {
         ...options,
@@ -63,3 +90,31 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
   (fallbackError as any).code = "NETWORK_ERROR";
   throw fallbackError;
 }
+
+export const api: ApiClientFunction = Object.assign(
+  <T>(path: string, options?: ApiRequestOptions) => baseApi<T>(path, options),
+  {
+    get: <T>(path: string, options?: ApiRequestOptions) =>
+      baseApi<T>(path, { ...options, method: 'GET' }),
+    post: <T>(path: string, body?: any, options?: ApiRequestOptions) =>
+      baseApi<T>(path, {
+        ...options,
+        method: 'POST',
+        body: body !== undefined ? (typeof body === 'string' ? body : JSON.stringify(body)) : undefined,
+      }),
+    put: <T>(path: string, body?: any, options?: ApiRequestOptions) =>
+      baseApi<T>(path, {
+        ...options,
+        method: 'PUT',
+        body: body !== undefined ? (typeof body === 'string' ? body : JSON.stringify(body)) : undefined,
+      }),
+    patch: <T>(path: string, body?: any, options?: ApiRequestOptions) =>
+      baseApi<T>(path, {
+        ...options,
+        method: 'PATCH',
+        body: body !== undefined ? (typeof body === 'string' ? body : JSON.stringify(body)) : undefined,
+      }),
+    delete: <T>(path: string, options?: ApiRequestOptions) =>
+      baseApi<T>(path, { ...options, method: 'DELETE' }),
+  }
+);

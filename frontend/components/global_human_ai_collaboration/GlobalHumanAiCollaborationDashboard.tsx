@@ -223,9 +223,9 @@ export default function GlobalHumanAiCollaborationDashboard() {
                 </h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                   {[
-                    { title: "Select Zero-Emission Grid Topology", quality: "95%", human_signed: True },
-                    { title: "Adopt Quantum-Resistant Encryption Standard", quality: "98%", human_signed: True },
-                    { title: "Deploy Federated AI Clinical Study", quality: "94%", human_signed: True }
+                    { title: "Select Zero-Emission Grid Topology", quality: "95%", human_signed: true },
+                    { title: "Adopt Quantum-Resistant Encryption Standard", quality: "98%", human_signed: true },
+                    { title: "Deploy Federated AI Clinical Study", quality: "94%", human_signed: true }
                   ].map((dec, idx) => (
                     <div key={idx} style={{
                       backgroundColor: "rgba(31, 41, 55, 0.4)",

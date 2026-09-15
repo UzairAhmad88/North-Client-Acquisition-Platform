@@ -6,7 +6,7 @@ export const metadata = {
   description: 'Autonomous Enterprise AI Operating System - Agents/Detail',
 };
 
-export default function Agents/DetailPage() {
+export default function AgentDetailPage() {
   return (
     <div className="space-y-6">
       <AICommandCenterDashboard />

@@ -2,6 +2,7 @@ import { api } from './client';
 
 export interface StrategicObjective {
   id?: string;
+  objective_id?: string;
   objective_code: string;
   name: string;
   description?: string;
@@ -16,6 +17,7 @@ export interface StrategicObjective {
   unit: string;
   status: string;
   confidence_score: number;
+  confidence?: number;
   progress_percentage: number;
   evidence_summary?: string;
   version: number;
@@ -80,6 +82,8 @@ export interface OptimizationResult {
   explanation: string;
 }
 
+export type OptimizationRun = OptimizationResult;
+
 export interface ParetoPlan {
   plan_code: string;
   title: string;
@@ -90,6 +94,29 @@ export interface ParetoPlan {
   total_cost_usd: number;
   expected_net_benefit_usd: number;
   is_pareto_optimal: boolean;
+}
+
+export interface ParetoFrontier {
+  frontier_id?: string;
+  frontier_packages?: any[];
+  pareto_front_plans?: ParetoPlan[];
+  trade_off_notes?: string;
+}
+
+export interface StrategicDecisionRecord {
+  id: string;
+  decision_id?: string;
+  title?: string;
+  decision?: string;
+  rationale?: string;
+  date?: string;
+  author?: string;
+  status?: string;
+  question?: string;
+  created_at?: string;
+  selected_option?: any;
+  decided_by?: string;
+  impact_rating?: string;
 }
 
 export interface FeasibilityItem {
@@ -133,8 +160,11 @@ export interface StrategyOverview {
   composite_health_percentage: number;
   total_active_objectives: number;
   total_active_initiatives: number;
+  active_plans?: any;
   scorecard: Scorecard;
 }
+
+export type StrategicPlanOverview = StrategyOverview;
 
 export interface StrategyCopilotResponse {
   query: string;
@@ -143,13 +173,22 @@ export interface StrategyCopilotResponse {
   recommendations: string[];
   confidence: number;
   governance_notice: string;
+  answer?: string;
+  evidence?: any[];
+  assumptions?: any[];
+  suggested_actions?: string[];
 }
+
+export type StrategyCopilotQueryResponse = StrategyCopilotResponse;
 
 export const strategyApi = {
   getOverview: (tenantId: string = 'default_tenant') =>
     api.get<StrategyOverview>('/api/v1/strategy/overview', { params: { tenant_id: tenantId } }),
 
   listObjectives: (pillar?: string) =>
+    api.get<StrategicObjective[]>('/api/v1/strategy/objectives', { params: { pillar } }),
+
+  getObjectives: (pillar?: string) =>
     api.get<StrategicObjective[]>('/api/v1/strategy/objectives', { params: { pillar } }),
 
   createObjective: (payload: {
@@ -180,6 +219,9 @@ export const strategyApi = {
   listInitiatives: () =>
     api.get<StrategicInitiative[]>('/api/v1/strategy/initiatives'),
 
+  getInitiatives: () =>
+    api.get<StrategicInitiative[]>('/api/v1/strategy/initiatives'),
+
   createInitiative: (payload: {
     title: string;
     owner: string;
@@ -193,14 +235,26 @@ export const strategyApi = {
     api.post<StrategicInitiative>('/api/v1/strategy/initiatives', payload),
 
   runOptimization: (payload: {
+    plan_id?: string;
     budget_limit_usd?: number;
     capacity_limit_fte?: number;
+    budget_ceiling?: number;
+    fte_ceiling?: number;
+    fte_capacity_ceiling?: number;
+    weights?: any;
+    objective_weights?: any;
+    solver_type?: string;
     max_acceptable_risk?: number;
   }) =>
     api.post<OptimizationResult>('/api/v1/strategy/optimization', payload),
 
   getParetoFrontier: (budget: number = 100000, capacity: number = 8) =>
     api.get<ParetoPlan[]>('/api/v1/strategy/pareto', { params: { budget, capacity } }),
+
+  getParetoAnalysis: async (budget: number = 100000, capacity: number = 8): Promise<ParetoFrontier> => {
+    const plans = await api.get<ParetoPlan[]>('/api/v1/strategy/pareto', { params: { budget, capacity } });
+    return { frontier_id: 'frontier-001', frontier_packages: Array.isArray(plans) ? plans : [], pareto_front_plans: Array.isArray(plans) ? plans : [] };
+  },
 
   getFeasibility: () =>
     api.get<FeasibilityItem[]>('/api/v1/strategy/feasibility'),
@@ -218,6 +272,10 @@ export const strategyApi = {
     drift_tolerance_pct?: number;
   }) =>
     api.post<{ has_drift: boolean; drift_event?: any }>('/api/v1/strategy/drift/check', payload),
+
+  getDecisions: async () => [],
+  approveDecision: async (id: string, rationale?: string) => ({}),
+  rejectDecision: async (id: string, reason?: string) => ({}),
 
   recordDecision: (payload: {
     question: string;

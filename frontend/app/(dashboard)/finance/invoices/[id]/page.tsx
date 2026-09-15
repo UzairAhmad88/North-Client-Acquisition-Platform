@@ -1,4 +1,4 @@
-import { InvoiceDetail } from '@/frontend/components/finance/InvoiceDetail';
+import { InvoiceDetail } from '@/components/finance/InvoiceDetail';
 
 export default function InvoiceDetailPage({ params }: { params: { id: string } }) {
   return (

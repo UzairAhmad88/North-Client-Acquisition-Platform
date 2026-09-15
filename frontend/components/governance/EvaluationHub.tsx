@@ -60,7 +60,7 @@ export const EvaluationHub: React.FC<EvaluationHubProps> = ({ datasets, runs, on
               <div className="flex items-center justify-between pt-2 border-t border-zinc-850">
                 <span className="text-xs text-zinc-500">{ds.cases?.length || 5} curated cases</span>
                 <button
-                  onClick={() => handleRunBenchmark(ds.id, ds.task_type)}
+                  onClick={() => handleRunBenchmark(ds.id, ds.task_type || 'GENERAL')}
                   disabled={runningId === ds.id}
                   className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition disabled:opacity-50"
                 >

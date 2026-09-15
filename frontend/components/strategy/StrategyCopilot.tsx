@@ -46,10 +46,10 @@ export const StrategyCopilot: React.FC<StrategyCopilotProps> = ({ onQuery }) => 
           ...prev,
           {
             role: 'assistant',
-            content: res.answer,
-            evidence: res.evidence,
-            assumptions: res.assumptions,
-            suggestedActions: res.suggested_actions,
+            content: res.answer || res.explanation || 'No response returned.',
+            evidence: res.evidence || [],
+            assumptions: res.assumptions || [],
+            suggestedActions: res.suggested_actions || res.recommendations || [],
           },
         ]);
       } else {

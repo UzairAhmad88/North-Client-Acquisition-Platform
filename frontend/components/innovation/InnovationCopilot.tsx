@@ -38,12 +38,12 @@ export const InnovationCopilot: React.FC<InnovationCopilotProps> = ({ workspaceI
     setIsLoading(true);
 
     try {
-      const resp = await innovationApi.queryCopilot(q, workspaceId);
+      const resp = await innovationApi.queryCopilot({ workspace_id: workspaceId, query: q });
       setHistory(prev => [
         ...prev,
         {
           role: 'copilot',
-          text: resp.answer,
+          text: resp.answer || resp.response_text || 'Analysis complete.',
           data: resp
         }
       ]);
@@ -109,7 +109,7 @@ export const InnovationCopilot: React.FC<InnovationCopilotProps> = ({ workspaceI
                     <div>
                       <span className="text-slate-400 font-semibold">Evidence Grounding:</span>
                       <ul className="list-disc list-inside text-emerald-400 mt-0.5">
-                        {msg.data.grounding_evidence.map((ev, idx) => (
+                        {msg.data.grounding_evidence.map((ev: any, idx: number) => (
                           <li key={idx}>{ev}</li>
                         ))}
                       </ul>
@@ -120,7 +120,7 @@ export const InnovationCopilot: React.FC<InnovationCopilotProps> = ({ workspaceI
                     <div>
                       <span className="text-slate-400 font-semibold">Underlying Assumptions:</span>
                       <ul className="list-disc list-inside text-amber-400 mt-0.5">
-                        {msg.data.assumptions_identified.map((asmp, idx) => (
+                        {msg.data.assumptions_identified.map((asmp: any, idx: number) => (
                           <li key={idx}>{asmp}</li>
                         ))}
                       </ul>
@@ -131,7 +131,7 @@ export const InnovationCopilot: React.FC<InnovationCopilotProps> = ({ workspaceI
                     <div>
                       <span className="text-slate-400 font-semibold">Uncertainties & Limitations:</span>
                       <ul className="list-disc list-inside text-slate-400 mt-0.5">
-                        {msg.data.limitations.map((lim, idx) => (
+                        {msg.data.limitations.map((lim: any, idx: number) => (
                           <li key={idx}>{lim}</li>
                         ))}
                       </ul>

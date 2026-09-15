@@ -19,7 +19,7 @@ export const TwinDashboard: React.FC = () => {
     setLoading(true);
     try {
       const res = await digitalTwinApi.getOverview();
-      setOverview(res.data);
+      setOverview((res as any)?.data || res);
     } catch (err) {
       console.error('Failed to load twin overview', err);
     } finally {

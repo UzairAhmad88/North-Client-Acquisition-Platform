@@ -53,7 +53,7 @@ export interface DataPipelineItem {
   source_datasets: string[];
   target_dataset: string;
   schedule_type: string;
-  sla_minutes: int;
+  sla_minutes: number;
   status: string;
   owner_team: string;
   last_run_status: string;

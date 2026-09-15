@@ -46,8 +46,15 @@ export default function FinancialCommandCenterDashboard() {
   const [simulating, setSimulating] = useState(false);
   const [simResult, setSimResult] = useState<any>(null);
 
-  // Dual Approval payment state
-  const [pendingPayments, setPendingPayments] = useState([
+  const [pendingPayments, setPendingPayments] = useState<Array<{
+    id: string;
+    vendor: string;
+    amount: number;
+    due: string;
+    dualRequired: boolean;
+    approvedBy1: string | null;
+    approvedBy2: string | null;
+  }>>([
     { id: 'PAY-892', vendor: 'Global Cloud Infra Corp', amount: 45000.0, due: '2026-09-18', dualRequired: true, approvedBy1: 'Finance Mgr (Alice)', approvedBy2: null },
     { id: 'PAY-893', vendor: 'Silicon Foundry Ltd', amount: 128500.0, due: '2026-09-22', dualRequired: true, approvedBy1: null, approvedBy2: null }
   ]);

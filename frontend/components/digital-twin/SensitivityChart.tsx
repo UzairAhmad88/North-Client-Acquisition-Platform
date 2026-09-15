@@ -12,7 +12,7 @@ export const SensitivityChart: React.FC = () => {
     setLoading(true);
     try {
       const res = await digitalTwinApi.getSensitivity({ target_metric: targetMetric });
-      setRankings(res.data || []);
+      setRankings(Array.isArray(res) ? res : ((res as any)?.data || []));
     } catch (err) {
       console.error('Failed to load sensitivity analysis', err);
     } finally {

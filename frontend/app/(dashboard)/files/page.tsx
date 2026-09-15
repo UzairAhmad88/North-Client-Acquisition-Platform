@@ -1,4 +1,4 @@
-import { DocumentWorkspace } from '@/frontend/components/documents/DocumentWorkspace';
+import { DocumentWorkspace } from '@/components/documents/DocumentWorkspace';
 
 export default function FilesPage() {
   return (

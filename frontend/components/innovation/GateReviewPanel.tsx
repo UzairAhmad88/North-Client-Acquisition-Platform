@@ -20,7 +20,7 @@ const GATE_TITLES: Record<GateStage, string> = {
   [GateStage.GATE_7_SCALE_PIVOT_STOP]: 'Gate 7: Scale, Pivot, or Sunset'
 };
 
-const DECISION_BADGES: Record<GateDecision, { bg: string; text: string; label: string }> = {
+const DECISION_BADGES: Record<string, { bg: string; text?: string; label: string }> = {
   [GateDecision.PROCEED]: { bg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', label: 'Proceed to Next Gate' },
   [GateDecision.PIVOT]: { bg: 'bg-amber-500/20 text-amber-300 border-amber-500/30', label: 'Pivot Required' },
   [GateDecision.PAUSE]: { bg: 'bg-blue-500/20 text-blue-300 border-blue-500/30', label: 'Paused / Backlog' },
@@ -91,7 +91,7 @@ export const GateReviewPanel: React.FC<GateReviewPanelProps> = ({
               <div className="text-xs font-medium truncate mt-0.5">{label.replace(/Gate \d: /, '')}</div>
               {decision && (
                 <div className="mt-2">
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded border font-semibold ${DECISION_BADGES[decision]?.bg}`}>
+                  <span className={`text-[9px] px-1.5 py-0.5 rounded border font-semibold ${(DECISION_BADGES as any)[decision]?.bg || 'bg-slate-800 text-slate-300'}`}>
                     {decision}
                   </span>
                 </div>

@@ -132,16 +132,14 @@ export interface KnowledgeGraphData {
 }
 
 export async function getKnowledgeOverview(tenantId = 'default_tenant'): Promise<KnowledgeOverview> {
-  const { data } = await api.get<KnowledgeOverview>(`/api/v1/knowledge/overview?tenant_id=${tenantId}`);
-  return data;
+  return api.get<KnowledgeOverview>(`/api/v1/knowledge/overview?tenant_id=${tenantId}`);
 }
 
 export async function listKnowledgeItems(domain?: string, tenantId = 'default_tenant'): Promise<KnowledgeItem[]> {
   const url = domain
     ? `/api/v1/knowledge/items?domain=${domain}&tenant_id=${tenantId}`
     : `/api/v1/knowledge/items?tenant_id=${tenantId}`;
-  const { data } = await api.get<KnowledgeItem[]>(url);
-  return data;
+  return api.get<KnowledgeItem[]>(url);
 }
 
 export async function createKnowledgeItem(payload: {
@@ -156,8 +154,7 @@ export async function createKnowledgeItem(payload: {
   classification?: string;
   is_ai_generated?: boolean;
 }): Promise<KnowledgeItem> {
-  const { data } = await api.post<KnowledgeItem>('/api/v1/knowledge/items', payload);
-  return data;
+  return api.post<KnowledgeItem>('/api/v1/knowledge/items', payload);
 }
 
 export async function searchKnowledge(payload: {
@@ -166,8 +163,7 @@ export async function searchKnowledge(payload: {
   strategy?: string;
   top_k?: number;
 }): Promise<SearchResult[]> {
-  const { data } = await api.post<SearchResult[]>('/api/v1/knowledge/search', payload);
-  return data;
+  return api.post<SearchResult[]>('/api/v1/knowledge/search', payload);
 }
 
 export async function assembleAiContext(payload: {
@@ -176,8 +172,7 @@ export async function assembleAiContext(payload: {
   budget_tokens?: number;
   domain?: string;
 }): Promise<ContextBundle> {
-  const { data } = await api.post<ContextBundle>('/api/v1/knowledge/context', payload);
-  return data;
+  return api.post<ContextBundle>('/api/v1/knowledge/context', payload);
 }
 
 export async function processDocument(payload: {
@@ -186,44 +181,37 @@ export async function processDocument(payload: {
   content: string;
   doc_type?: string;
 }): Promise<any> {
-  const { data } = await api.post('/api/v1/knowledge/documents/process', payload);
-  return data;
+  return api.post('/api/v1/knowledge/documents/process', payload);
 }
 
 export async function getKnowledgeGraph(rootCode?: string, maxHops = 2): Promise<KnowledgeGraphData> {
   const url = rootCode
     ? `/api/v1/knowledge/graph?root_code=${rootCode}&max_hops=${maxHops}`
     : `/api/v1/knowledge/graph?max_hops=${maxHops}`;
-  const { data } = await api.get<KnowledgeGraphData>(url);
-  return data;
+  return api.get<KnowledgeGraphData>(url);
 }
 
 export async function listConflicts(): Promise<KnowledgeConflict[]> {
-  const { data } = await api.get<KnowledgeConflict[]>('/api/v1/knowledge/conflicts');
-  return data;
+  return api.get<KnowledgeConflict[]>('/api/v1/knowledge/conflicts');
 }
 
 export async function resolveConflict(conflictCode: string, payload: {
   resolved_by: string;
   resolution_notes: string;
 }): Promise<KnowledgeConflict> {
-  const { data } = await api.post<KnowledgeConflict>(`/api/v1/knowledge/conflicts/${conflictCode}/resolve`, payload);
-  return data;
+  return api.post<KnowledgeConflict>(`/api/v1/knowledge/conflicts/${conflictCode}/resolve`, payload);
 }
 
 export async function listDecisions(): Promise<DecisionRecord[]> {
-  const { data } = await api.get<DecisionRecord[]>('/api/v1/knowledge/decisions');
-  return data;
+  return api.get<DecisionRecord[]>('/api/v1/knowledge/decisions');
 }
 
 export async function listLessons(): Promise<LessonItem[]> {
-  const { data } = await api.get<LessonItem[]>('/api/v1/knowledge/lessons');
-  return data;
+  return api.get<LessonItem[]>('/api/v1/knowledge/lessons');
 }
 
 export async function getKnowledgeQuality(): Promise<any> {
-  const { data } = await api.get('/api/v1/knowledge/quality');
-  return data;
+  return api.get('/api/v1/knowledge/quality');
 }
 
 export async function submitSearchFeedback(payload: {
@@ -232,6 +220,5 @@ export async function submitSearchFeedback(payload: {
   is_helpful: boolean;
   feedback_text?: string;
 }): Promise<any> {
-  const { data } = await api.post('/api/v1/knowledge/feedback', payload);
-  return data;
+  return api.post('/api/v1/knowledge/feedback', payload);
 }

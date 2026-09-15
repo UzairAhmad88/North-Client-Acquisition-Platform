@@ -53,7 +53,7 @@ export const ParetoChart: React.FC<ParetoChartProps> = ({ paretoFrontier, onSele
         <div className="flex items-center gap-3">
           <div className="text-right">
             <div className="text-xs text-slate-400">Analysis ID</div>
-            <div className="text-xs font-mono text-indigo-300">{paretoFrontier.frontier_id.slice(0, 12)}...</div>
+            <div className="text-xs font-mono text-indigo-300">{(paretoFrontier.frontier_id || 'frontier-001').slice(0, 12)}...</div>
           </div>
           <div className="px-3 py-1.5 rounded-lg bg-indigo-500/20 border border-indigo-500/40 text-xs font-semibold text-indigo-300">
             {packages.length} Trade-off Options
@@ -63,7 +63,7 @@ export const ParetoChart: React.FC<ParetoChartProps> = ({ paretoFrontier, onSele
 
       {/* Package Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {packages.map((pkg, idx) => (
+        {packages.map((pkg: any, idx: number) => (
           <div
             key={pkg.package_id || idx}
             className="flex flex-col justify-between rounded-xl border border-slate-700/60 bg-slate-900/60 p-5 backdrop-blur-sm transition-all hover:border-indigo-500/50 hover:bg-slate-900/90 hover:shadow-lg hover:shadow-indigo-500/5"

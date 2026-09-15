@@ -21,7 +21,7 @@ export const InitiativePortfolio: React.FC = () => {
     setLoading(true);
     try {
       const res = await strategyApi.listInitiatives();
-      setInitiatives(res.data || []);
+      setInitiatives(Array.isArray(res) ? res : ((res as any)?.data || []));
     } catch (err) {
       console.error('Failed to load initiatives', err);
     } finally {

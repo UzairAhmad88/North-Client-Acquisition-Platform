@@ -186,8 +186,8 @@ export const InnovationDashboard: React.FC = () => {
             className="bg-slate-950 border border-slate-700/80 text-xs text-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500"
           >
             {workspaces.map(w => (
-              <option key={w.workspace_id} value={w.workspace_id}>
-                {w.title} ({w.stage})
+              <option key={w.id || w.workspace_id} value={w.id || w.workspace_id}>
+                {w.title} ({w.stage_gate || w.stage || 'GATE_0'})
               </option>
             ))}
           </select>
@@ -209,19 +209,19 @@ export const InnovationDashboard: React.FC = () => {
         </div>
         <div className="p-3.5 rounded-xl border border-slate-800 bg-slate-900/60">
           <div className="text-[10px] uppercase font-semibold text-slate-400">Validated Problems</div>
-          <div className="text-xl font-bold text-amber-400 mt-1">{overview?.validated_problems ?? problems.length}</div>
+          <div className="text-xl font-bold text-amber-400 mt-1">{(overview as any)?.validated_problems ?? overview?.total_problems_cataloged ?? problems.length}</div>
         </div>
         <div className="p-3.5 rounded-xl border border-slate-800 bg-slate-900/60">
           <div className="text-[10px] uppercase font-semibold text-slate-400">Ideas Scored</div>
-          <div className="text-xl font-bold text-indigo-400 mt-1">{overview?.total_ideas ?? ideas.length}</div>
+          <div className="text-xl font-bold text-indigo-400 mt-1">{(overview as any)?.total_ideas ?? overview?.total_ideas_generated ?? ideas.length}</div>
         </div>
         <div className="p-3.5 rounded-xl border border-slate-800 bg-slate-900/60">
           <div className="text-[10px] uppercase font-semibold text-slate-400">Running Experiments</div>
-          <div className="text-xl font-bold text-cyan-400 mt-1">{overview?.active_experiments ?? experiments.length}</div>
+          <div className="text-xl font-bold text-cyan-400 mt-1">{overview?.active_experiments_count ?? (overview as any)?.active_experiments ?? experiments.length}</div>
         </div>
         <div className="p-3.5 rounded-xl border border-slate-800 bg-slate-900/60">
           <div className="text-[10px] uppercase font-semibold text-slate-400">Active PRDs</div>
-          <div className="text-xl font-bold text-emerald-400 mt-1">{overview?.active_prds ?? prds.length}</div>
+          <div className="text-xl font-bold text-emerald-400 mt-1">{(overview as any)?.active_prds ?? prds.length}</div>
         </div>
         <div className="p-3.5 rounded-xl border border-slate-800 bg-slate-900/60">
           <div className="text-[10px] uppercase font-semibold text-slate-400">Avg Portfolio ROI</div>
@@ -260,13 +260,8 @@ export const InnovationDashboard: React.FC = () => {
         ))}
       </div>
 
-      {/* Main Tab Views */}
-      {loading ? (
-        <div className="p-12 text-center text-slate-400 text-sm">
-          <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          Loading Phase 55 Innovation Intelligence state...
-        </div>
-      ) : error ? (
+      {/* Main Content Area */}
+      {error ? (
         <div className="p-6 rounded-xl bg-rose-950/30 border border-rose-800 text-rose-300 text-xs">
           {error}
         </div>
@@ -275,9 +270,6 @@ export const InnovationDashboard: React.FC = () => {
           {activeTab === 'problems' && (
             <ProblemBoard
               problems={problems}
-              opportunities={opportunities}
-              onCreateProblem={handleCreateProblem}
-              onCreateOpportunity={handleCreateOpportunity}
             />
           )}
 
@@ -294,12 +286,8 @@ export const InnovationDashboard: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {ideas.map(idea => (
                   <IdeaCard
-                    key={idea.idea_id}
+                    key={idea.id || idea.idea_id}
                     idea={idea}
-                    onScore={async (factors) => {
-                      const updated = await innovationApi.scoreIdea(idea.idea_id, factors);
-                      setIdeas(prev => prev.map(i => (i.idea_id === updated.idea_id ? updated : i)));
-                    }}
                   />
                 ))}
               </div>
@@ -309,61 +297,24 @@ export const InnovationDashboard: React.FC = () => {
           {activeTab === 'assumptions' && (
             <AssumptionMatrix
               assumptions={assumptions}
-              onMapAssumption={async (cat, desc, impact, unc) => {
-                const newAsmp = await innovationApi.createAssumption({
-                  workspace_id: activeWorkspaceId,
-                  hypothesis_id: hypotheses[0]?.hypothesis_id ?? 'hypo-001',
-                  category: cat,
-                  description: desc,
-                  impact_score: impact,
-                  uncertainty_score: unc
-                });
-                setAssumptions(prev => [newAsmp, ...prev]);
-              }}
             />
           )}
 
           {activeTab === 'experiments' && (
             <ExperimentRunner
               experiments={experiments}
-              onRunAnalysis={async (expId, ctrlMean, trtMean, ctrlN, trtN, metric) => {
-                const res = await innovationApi.recordExperimentResult(expId, {
-                  control_mean: ctrlMean,
-                  treatment_mean: trtMean,
-                  control_sample_size: ctrlN,
-                  treatment_sample_size: trtN,
-                  primary_metric: metric
-                });
-                setExperiments(prev =>
-                  prev.map(e => (e.experiment_id === expId ? { ...e, result: res } : e))
-                );
-              }}
+              learnings={learnings}
             />
           )}
 
           {activeTab === 'concepts' && (
             <div className="space-y-6">
-              {concepts.map(concept => {
-                const bcase = businessCases.find(b => b.concept_id === concept.concept_id);
-                const prd = prds.find(p => p.concept_id === concept.concept_id);
-                return (
-                  <ProductConceptViewer
-                    key={concept.concept_id}
-                    concept={concept}
-                    businessCase={bcase}
-                    prd={prd}
-                    onGeneratePrd={async () => {
-                      const newPrd = await innovationApi.generatePRD(concept.concept_id, {
-                        non_functional_requirements: [
-                          'Sub-150ms API latency at p99',
-                          'SOC2 & GDPR enterprise compliance'
-                        ]
-                      });
-                      setPrds(prev => [newPrd, ...prev.filter(p => p.concept_id !== concept.concept_id)]);
-                    }}
-                  />
-                );
-              })}
+              {concepts.map(concept => (
+                <ProductConceptViewer
+                  key={concept.id || concept.concept_id}
+                  concept={concept}
+                />
+              ))}
             </div>
           )}
 

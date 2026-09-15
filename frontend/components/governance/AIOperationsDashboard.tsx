@@ -146,8 +146,8 @@ export const AIOperationsDashboard: React.FC<AIOperationsDashboardProps> = ({
                 </div>
 
                 <div className="text-right text-xs text-zinc-400">
-                  <div className="text-zinc-200 font-mono font-medium">{trace.total_duration_ms.toFixed(0)} ms</div>
-                  <div>{trace.total_tokens} tokens (${trace.estimated_cost.toFixed(4)})</div>
+                  <div className="text-zinc-200 font-mono font-medium">{(trace.total_duration_ms || trace.duration_ms || 0).toFixed(0)} ms</div>
+                  <div>{(trace.total_tokens || trace.tokens_used || 0)} tokens (${(trace.estimated_cost || 0).toFixed(4)})</div>
                 </div>
               </div>
             ))

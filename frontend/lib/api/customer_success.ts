@@ -83,6 +83,7 @@ export interface ClientHealthScore {
   engagement_score?: string;
   project_health_score?: string;
   project_score?: string;
+  satisfaction_score?: any;
   support_satisfaction_score?: string;
   support_score?: string;
   financial_health_score?: string;

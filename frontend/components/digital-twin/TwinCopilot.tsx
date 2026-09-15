@@ -13,7 +13,7 @@ export const TwinCopilot: React.FC = () => {
     setLoading(true);
     try {
       const res = await digitalTwinApi.queryCopilot(query);
-      setResponse(res.data);
+      setResponse((res as any)?.data || res);
     } catch (err) {
       console.error('Copilot query failed', err);
     } finally {

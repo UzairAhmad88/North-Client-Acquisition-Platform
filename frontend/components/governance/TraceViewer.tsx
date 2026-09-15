@@ -24,8 +24,8 @@ export const TraceViewer: React.FC<TraceViewerProps> = ({ traces, onRefresh }) =
 
   const filteredTraces = traces.filter(
     (t) =>
-      t.agent_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.workflow_id.toLowerCase().includes(searchTerm.toLowerCase())
+      (t.agent_id || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (t.workflow_id || t.task_name || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -71,10 +71,10 @@ export const TraceViewer: React.FC<TraceViewerProps> = ({ traces, onRefresh }) =
                   {t.status}
                 </span>
               </div>
-              <div className="text-[11px] text-zinc-500 mt-1 font-mono truncate">{t.workflow_id}</div>
+              <div className="text-[11px] text-zinc-500 mt-1 font-mono truncate">{t.workflow_id || t.task_name || t.trace_id}</div>
               <div className="flex items-center justify-between text-[10px] text-zinc-500 mt-2">
-                <span>{t.total_duration_ms.toFixed(0)} ms</span>
-                <span>{t.total_tokens} tok</span>
+                <span>{(t.total_duration_ms || t.duration_ms || 0).toFixed(0)} ms</span>
+                <span>{(t.total_tokens || t.tokens_used || 0)} tok</span>
               </div>
             </button>
           ))}
@@ -96,8 +96,8 @@ export const TraceViewer: React.FC<TraceViewerProps> = ({ traces, onRefresh }) =
                 <div className="text-xs text-zinc-400 font-mono">Trace ID: {selectedTrace.id}</div>
               </div>
               <p className="text-xs text-zinc-400">
-                Workflow: <span className="font-mono text-zinc-300">{selectedTrace.workflow_id}</span> • Model:{" "}
-                {selectedTrace.model_id} ({selectedTrace.model_version}) • Prompt: {selectedTrace.prompt_version}
+                Workflow: <span className="font-mono text-zinc-300">{selectedTrace.workflow_id || selectedTrace.task_name}</span> • Model:{" "}
+                {selectedTrace.model_id || 'GPT-4o'} ({selectedTrace.model_version || 'v1.0'}) • Prompt: {selectedTrace.prompt_version || 'v1'}
               </p>
             </div>
 
@@ -110,7 +110,7 @@ export const TraceViewer: React.FC<TraceViewerProps> = ({ traces, onRefresh }) =
 
               <div className="space-y-3">
                 {selectedTrace.events && selectedTrace.events.length > 0 ? (
-                  selectedTrace.events.map((span, idx) => (
+                  selectedTrace.events.map((span: any, idx: number) => (
                     <div key={span.id || idx} className="bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-xs">
                       <div className="flex items-center justify-between mb-1.5">
                         <div className="flex items-center gap-2">

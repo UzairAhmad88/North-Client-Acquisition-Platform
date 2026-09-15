@@ -146,6 +146,118 @@ export interface CopilotAnswer {
   timestamp: string;
 }
 
+export interface TraceEvent {
+  id: string;
+  name: string;
+  span_type: string;
+  status: string;
+  timestamp?: string;
+  created_at?: string;
+  input_summary?: any;
+  output_summary?: any;
+  duration_ms?: number;
+  tokens_consumed?: number;
+  metadata?: Record<string, any>;
+}
+
+export interface AITrace {
+  id: string;
+  trace_id?: string;
+  tenant_id?: string;
+  started_at?: string;
+  agent_id: string;
+  task_name?: string;
+  status: string;
+  duration_ms?: number;
+  tokens_used?: number;
+  events?: TraceEvent[];
+  created_at?: string;
+  total_duration_ms?: number;
+  agent_version?: string;
+  workflow_id?: string;
+  model_id?: string;
+  model_version?: string;
+  total_tokens?: number;
+  estimated_cost?: number;
+  prompt_version?: string;
+}
+
+export interface PromptItem {
+  id: string;
+  prompt_code?: string;
+  name: string;
+  version?: string;
+  template?: string;
+  status?: string;
+  author?: string;
+  created_at: string;
+  tenant_id?: string;
+  current_version?: string;
+  purpose?: string;
+  agent_target?: string;
+  prompt_key?: string;
+  versions?: any[];
+}
+
+export interface EvaluationDataset {
+  id: string;
+  dataset_code?: string;
+  name: string;
+  sample_count?: number;
+  domain?: string;
+  created_at: string;
+  tenant_id?: string;
+  dataset_key?: string;
+  description?: string;
+  cases?: any[];
+  task_type?: string;
+  is_golden?: boolean;
+  version?: string;
+}
+
+export interface EvaluationRun {
+  id: string;
+  run_code?: string;
+  dataset_id?: string;
+  model_name?: string;
+  pass_rate_pct?: number;
+  latency_p99_ms?: number;
+  status?: string;
+  completed_at?: string;
+  tenant_id?: string;
+  agent_key?: string;
+  agent_version?: string;
+  prompt_version?: string;
+  model_version?: string;
+  overall_score?: number;
+  passed_cases_count?: number;
+  failed_cases_count?: number;
+  regression_detected?: boolean;
+  regression_details?: string | Record<string, any>;
+  evaluation_type?: string;
+}
+
+export interface AIIncident {
+  id: string;
+  incident_code: string;
+  title: string;
+  severity: string;
+  status: string;
+  affected_agent_id: string;
+  detected_at: string;
+}
+
+export interface KillSwitchEvent {
+  id: string;
+  switch_code: string;
+  target_agent_id: string;
+  reason: string;
+  triggered_by: string;
+  is_active: boolean;
+  triggered_at: string;
+  level?: string;
+}
+
 export const governanceApi = {
   getOverview: () => api<GovernanceExecutiveSummary>('/governance/overview'),
   getPosture: () => api<GovernancePostureData>('/governance/posture'),
@@ -209,4 +321,14 @@ export const governanceApi = {
     api<CopilotAnswer>(`/governance/copilot/query?query=${encodeURIComponent(query)}`, {
       method: 'POST',
     }),
+
+  listTraces: async (): Promise<AITrace[]> => [],
+  listPrompts: async (): Promise<PromptItem[]> => [],
+  listEvaluationDatasets: async (): Promise<EvaluationDataset[]> => [],
+  listEvaluationRuns: async (): Promise<EvaluationRun[]> => [],
+  listIncidents: async (): Promise<AIIncident[]> => [],
+  getActiveKillSwitches: async (): Promise<KillSwitchEvent[]> => [],
+  runEvaluationBenchmark: async (payload: any): Promise<any> => ({}),
+  triggerKillSwitch: async (payload: any): Promise<any> => ({}),
+  registerPrompt: async (payload: any): Promise<any> => ({}),
 };

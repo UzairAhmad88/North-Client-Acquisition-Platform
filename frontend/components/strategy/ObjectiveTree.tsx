@@ -19,7 +19,7 @@ export const ObjectiveTree: React.FC = () => {
     setLoading(true);
     try {
       const res = await strategyApi.listObjectives();
-      setObjectives(res.data || []);
+      setObjectives(Array.isArray(res) ? res : ((res as any)?.data || []));
     } catch (err) {
       console.error('Failed to load objectives', err);
     } finally {

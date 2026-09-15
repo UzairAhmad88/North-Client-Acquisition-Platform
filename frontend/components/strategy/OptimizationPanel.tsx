@@ -16,7 +16,7 @@ export const OptimizationPanel: React.FC = () => {
         budget_limit_usd: budgetLimit,
         capacity_limit_fte: capacityLimit,
       });
-      setResult(res.data);
+      setResult((res as any)?.data || res);
     } catch (err) {
       console.error('Failed to run optimization', err);
     } finally {

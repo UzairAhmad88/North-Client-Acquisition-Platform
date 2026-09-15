@@ -21,7 +21,7 @@ export const DecisionMatrix: React.FC = () => {
         decision_owner: owner,
         selected_option_id: 'OPT-HIRE-2-DEV',
       });
-      setRecordedDecision(res.data);
+      setRecordedDecision((res as any)?.data || res);
     } catch (err) {
       console.error('Failed to record human decision', err);
     } finally {

@@ -117,23 +117,19 @@ export const StrategyDashboard: React.FC<StrategyDashboardProps> = ({
         {activeTab === 'overview' && (
           <StrategyOverview
             overview={overview}
-            onSelectPlan={(id) => setActiveTab('objectives')}
           />
         )}
 
         {activeTab === 'objectives' && (
-          <ObjectiveTree objectives={objectives} />
+          <ObjectiveTree />
         )}
 
         {activeTab === 'initiatives' && (
-          <InitiativePortfolio initiatives={initiatives} />
+          <InitiativePortfolio />
         )}
 
         {activeTab === 'optimization' && (
-          <OptimizationPanel
-            activeRun={optimizationRuns[0] || null}
-            onRunOptimization={onTriggerOptimization}
-          />
+          <OptimizationPanel />
         )}
 
         {activeTab === 'pareto' && (

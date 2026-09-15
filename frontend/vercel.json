@@ -1,6 +1,4 @@
 {
-  "buildCommand": "pnpm --prefix frontend build",
-  "outputDirectory": "frontend/.next",
   "framework": "nextjs",
   "rewrites": [
     {

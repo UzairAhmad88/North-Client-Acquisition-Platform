@@ -30,6 +30,10 @@ class Settings(BaseSettings):
     messaging_enabled: bool = False
     workers_enabled: bool = True
 
+    gemini_api_key: str = ""
+    mistral_api_key: str = ""
+    hf_token: str = ""
+
     @field_validator("cors_origins", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:

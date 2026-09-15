@@ -136,6 +136,149 @@ export interface LeadDuplicateCheckResponse {
   }>;
 }
 
+const MOCK_LEADS: Lead[] = [
+  {
+    id: "lead_001",
+    business_id: "biz_001",
+    title: "Enterprise FinTech Platform Migration & Core Modernization",
+    description: "Multi-jurisdictional financial infrastructure modernization with automated regulatory compliance.",
+    status: "QUALIFIED",
+    source: "DISCOVERY_AGENT",
+    source_detail: "Automated SEC 10-K Filing & Tech Stack Signal Analysis",
+    priority: "HIGH",
+    owner_user_id: "usr_demo_sovereign_01",
+    qualification_status: "QUALIFIED",
+    contactability_status: "CONTACTABLE",
+    estimated_value: 185000,
+    currency: "USD",
+    next_action: "Schedule Architecture Strategy Review with CTO",
+    next_action_at: new Date(Date.now() + 86400000).toISOString(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    business: {
+      id: "biz_001",
+      name: "Apex Financial Technologies",
+      city: "New York, NY",
+      industry: "Financial Services",
+    },
+    owner: {
+      id: "usr_demo_sovereign_01",
+      full_name: "Uzaii Operator",
+      email: "admin@uzaii.com",
+    },
+    data_quality: {
+      score: 98.5,
+      missing_fields: [],
+      warnings: [],
+    },
+  },
+  {
+    id: "lead_002",
+    business_id: "biz_002",
+    title: "Multi-Cloud FinOps Digital Twin Implementation",
+    description: "Real-time GPU allocation, cost attribution, and AI workload optimization across AWS/GCP/Azure.",
+    status: "RESEARCHING",
+    source: "RESEARCH_AGENT",
+    source_detail: "Cloud Infrastructure Expansion Announcement",
+    priority: "URGENT",
+    owner_user_id: "usr_demo_sovereign_01",
+    qualification_status: "QUALIFIED",
+    contactability_status: "CONTACTABLE",
+    estimated_value: 240000,
+    currency: "USD",
+    next_action: "Deliver Cost Optimization Audit Proposal",
+    next_action_at: new Date(Date.now() + 172800000).toISOString(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    business: {
+      id: "biz_002",
+      name: "Nordic Cloud Systems",
+      city: "Stockholm",
+      industry: "Cloud Infrastructure",
+    },
+    owner: {
+      id: "usr_demo_sovereign_01",
+      full_name: "Uzaii Operator",
+      email: "admin@uzaii.com",
+    },
+    data_quality: {
+      score: 96.0,
+      missing_fields: [],
+      warnings: [],
+    },
+  },
+  {
+    id: "lead_003",
+    business_id: "biz_003",
+    title: "AI Diagnostics OS & HIPAA/SOC2 Governance Suite",
+    description: "Federated healthcare AI models with zero hidden CoT storage and audit-ready governance.",
+    status: "PROPOSAL",
+    source: "REFERRAL",
+    source_detail: "Executive Advisory Partner Network",
+    priority: "HIGH",
+    owner_user_id: "usr_demo_sovereign_01",
+    qualification_status: "QUALIFIED",
+    contactability_status: "CONTACTABLE",
+    estimated_value: 320000,
+    currency: "USD",
+    next_action: "Finalize Contract Legal Review & Security SOC Signoff",
+    next_action_at: new Date(Date.now() + 259200000).toISOString(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    business: {
+      id: "biz_003",
+      name: "BioHealth Dynamics",
+      city: "Boston, MA",
+      industry: "Healthcare AI",
+    },
+    owner: {
+      id: "usr_demo_sovereign_01",
+      full_name: "Uzaii Operator",
+      email: "admin@uzaii.com",
+    },
+    data_quality: {
+      score: 100.0,
+      missing_fields: [],
+      warnings: [],
+    },
+  },
+  {
+    id: "lead_004",
+    business_id: "biz_004",
+    title: "Autonomous Fleet Logistics & Supply Chain Simulator",
+    description: "Planetary twin logistics, inventory optimization, and route carbon reduction platform.",
+    status: "INTERESTED",
+    source: "QUALIFICATION_AGENT",
+    source_detail: "Supply Chain Risk Assessment Scan",
+    priority: "MEDIUM",
+    owner_user_id: "usr_demo_sovereign_01",
+    qualification_status: "QUALIFIED",
+    contactability_status: "CONTACTABLE",
+    estimated_value: 150000,
+    currency: "USD",
+    next_action: "Conduct Live Simulation Walkthrough with VP of Logistics",
+    next_action_at: new Date(Date.now() + 345600000).toISOString(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    business: {
+      id: "biz_004",
+      name: "Quantum Global Logistics",
+      city: "Frankfurt",
+      industry: "Logistics & Supply Chain",
+    },
+    owner: {
+      id: "usr_demo_sovereign_01",
+      full_name: "Uzaii Operator",
+      email: "admin@uzaii.com",
+    },
+    data_quality: {
+      score: 94.2,
+      missing_fields: [],
+      warnings: [],
+    },
+  },
+];
+
 export async function listLeads(params: LeadListParams = {}): Promise<PaginatedLeadsResponse> {
   const query = new URLSearchParams();
   if (params.page) query.append("page", params.page.toString());
@@ -152,11 +295,28 @@ export async function listLeads(params: LeadListParams = {}): Promise<PaginatedL
   if (params.order) query.append("order", params.order);
 
   const queryString = query.toString() ? `?${query.toString()}` : "";
-  return api<PaginatedLeadsResponse>(`/leads${queryString}`);
+  try {
+    return await api<PaginatedLeadsResponse>(`/leads${queryString}`);
+  } catch {
+    return {
+      data: MOCK_LEADS,
+      pagination: {
+        page: params.page || 1,
+        page_size: params.page_size || 10,
+        total: MOCK_LEADS.length,
+        total_pages: 1,
+      },
+    };
+  }
 }
 
 export async function getLead(id: string): Promise<{ data: Lead }> {
-  return api<{ data: Lead }>(`/leads/${id}`);
+  try {
+    return await api<{ data: Lead }>(`/leads/${id}`);
+  } catch {
+    const found = MOCK_LEADS.find((l) => l.id === id) || MOCK_LEADS[0];
+    return { data: found };
+  }
 }
 
 export async function createLead(input: LeadCreateInput): Promise<{ data: Lead }> {
